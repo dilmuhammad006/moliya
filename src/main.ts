@@ -4,6 +4,7 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import CookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+
 const PORT = process.env.APP_PORT || 4000;
 const CORS = process.env.CORS_ORIGIN || 'http:localhost:4000';
 async function bootstrap() {
