@@ -4,7 +4,9 @@ import { LoginDto, RegisterDto } from './dtos';
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
@@ -90,6 +92,41 @@ export class AuthService {
       },
     };
   }
+
+ async createRefreshToken(token: string) {
+  try {
+    if (!token) {
+      throw new ForbiddenException('Refresh token topilmadi');
+    }
+
+    const payload = await this.jwt.verifyAsync(token, {
+      secret: process.env.REFRESH_TOKEN_SECRET,
+    });
+
+    const { accessToken, refreshToken } = await this.#_createToken(payload.id);
+
+    return {
+      success: true,
+      message: 'Tokenlar yangilandi',
+      data: {
+        tokens: {
+          accessToken,
+          refreshToken,
+        },
+      },
+    };
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      throw new ForbiddenException('Refresh token muddati tugagan');
+    }
+
+    if (error.name === 'JsonWebTokenError') {
+      throw new ForbiddenException('Refresh token yaroqsiz');
+    }
+
+    throw new InternalServerErrorException('Token tekshirishda xatolik');
+  }
+}
 
 
   async #_createToken(id: string) {

@@ -31,8 +31,10 @@ model User {
   full_name String
   password  String
 
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  Accounts   Account[]
+  Currencies Currency[]
 
   @@map("user")
 }
@@ -43,9 +45,11 @@ model Currency {
   Account                 Account[]
   From_currency_exchanges CurrencyExchange[] @relation("From_currency")
   To_currency_exchanges   CurrencyExchange[] @relation("To_currency")
+  user_id     String?
 
+  User       User?    @relation(fields: [user_id], references: [id])
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("currency")
 }
@@ -55,13 +59,15 @@ model Account {
   name                  String
   balance               Int
   currency_id           String?
-  Currency              Currency?     @relation(fields: [currency_id], references: [id])
+  user_id               String
   account_type          AccountStatus
+  Currency              Currency?     @relation(fields: [currency_id], references: [id])
   Outgoing_transactions Transaction[] @relation("From_account")
   Incoming_transactions Transaction[] @relation("To_account")
+  User                  User          @relation(fields: [user_id], references: [id])
 
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("account")
 }
@@ -70,10 +76,10 @@ model Category {
   id            String        @id @default(uuid())
   name          String
   category_type CategoryType
-  Transaction   Transaction[]
+  Transactions  Transaction[]
 
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("category")
 }
@@ -85,14 +91,13 @@ model Transaction {
   from_account_id  String
   to_account_id    String
   category_id      String
-  categoryId       String?
   transaction_type TransactionType
   From_account     Account?        @relation("From_account", fields: [from_account_id], references: [id])
   To_account       Account?        @relation("To_account", fields: [to_account_id], references: [id])
-  Category         Category?       @relation(fields: [categoryId], references: [id])
+  Category         Category?       @relation(fields: [category_id], references: [id])
 
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("transaction")
 }
@@ -101,11 +106,12 @@ model CurrencyExchange {
   id               String    @id @default(uuid())
   from_currency_id String?
   to_currency_id   String?
+  rate             Int
   From_currency    Currency? @relation("From_currency", fields: [from_currency_id], references: [id])
   To_currency      Currency? @relation("To_currency", fields: [to_currency_id], references: [id])
 
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("currency_exchange")
 }

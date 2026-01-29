@@ -32,6 +32,7 @@ export class CheckAuth implements CanActivate {
 
     const authHeader = request.headers.authorization;
 
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new ForbiddenException('Bearer access token topilmadi');
     }
