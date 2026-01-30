@@ -9,24 +9,20 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
-import { CategoryService } from './category.service';
-import { Protected } from 'src/decorators';
-import {
-  CreateCategoryDto,
-  GetAllCategoryDto,
-  UpdateCategoryDto,
-} from './dtos';
-import { Request } from 'express';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { AccountService } from './account.service';
+import { CreateAaccountDto, GetAllAccountDto, UpdateAccountDto } from './dtos';
+import { Protected } from 'src/decorators';
+import { Request } from 'express';
 
 @ApiBearerAuth('access-token')
-@Controller('category')
-export class CategoryController {
-  constructor(private readonly service: CategoryService) {}
+@Controller('account')
+export class AccountController {
+  constructor(private readonly service: AccountService) {}
 
   @Protected(true)
   @Get()
-  async getAll(@Query() payload: GetAllCategoryDto) {
+  async getAll(@Query() payload: GetAllAccountDto) {
     return await this.service.getAll(payload);
   }
 
@@ -46,7 +42,7 @@ export class CategoryController {
   @Post()
   async create(
     @Req() req: Request & { userId: string },
-    @Body() payload: CreateCategoryDto,
+    @Body() payload: CreateAaccountDto,
   ) {
     return await this.service.create(payload, req.userId);
   }
@@ -56,7 +52,7 @@ export class CategoryController {
   async update(
     @Req() req: Request & { userId: string },
     @Param('id') id: string,
-    @Body() payload: UpdateCategoryDto,
+    @Body() payload: UpdateAccountDto,
   ) {
     return await this.service.update(payload, req.userId, id);
   }

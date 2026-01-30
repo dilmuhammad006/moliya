@@ -46,6 +46,10 @@ export class CategoryService {
       where: {
         id,
       },
+      include: {
+        Transactions: true,
+        User: true,
+      },
     });
 
     if (!founded) {
@@ -134,21 +138,23 @@ export class CategoryService {
       throw new NotFoundException('Kategoriya topilmadi');
     }
 
-    const isExists = await this.prisma.category.findFirst({
-      where: {
-        name: payload.name,
-        user_id,
-        id: {
-          not: {
-            equals: category_id,
+    if (payload.name !== undefined) {
+      const isExists = await this.prisma.category.findFirst({
+        where: {
+          name: payload.name,
+          user_id,
+          id: {
+            not: {
+              equals: category_id,
+            },
           },
         },
-      },
-    });
-    if (isExists) {
-      throw new ConflictException(
-        'Sizda bu nomli kategoriya allaqachon mavjud',
-      );
+      });
+      if (isExists) {
+        throw new ConflictException(
+          'Sizda bu nomli kategoriya allaqachon mavjud',
+        );
+      }
     }
     const updated = await this.prisma.category.update({
       where: {

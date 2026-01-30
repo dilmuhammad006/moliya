@@ -1,8 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dtos';
 import { Protected } from 'src/decorators';
 import { TokenDto } from './dtos/refreshToken';
+import { Request } from 'express';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -23,5 +25,12 @@ export class AuthController {
   @Post('refresh-token')
   async createRefreshToken(@Body() payload: TokenDto) {
     return await this.service.createRefreshToken(payload.token);
+  }
+
+  @ApiBearerAuth('access-token')
+  @Protected(true)
+  @Get('me')
+  async me(@Req() req: Request & { userId: string }) {
+    return this.service.me(req.userId);
   }
 }

@@ -93,41 +93,59 @@ export class AuthService {
     };
   }
 
- async createRefreshToken(token: string) {
-  try {
-    if (!token) {
-      throw new ForbiddenException('Refresh token topilmadi');
+  async createRefreshToken(token: string) {
+    try {
+      if (!token) {
+        throw new ForbiddenException('Refresh token topilmadi');
+      }
+
+      const payload = await this.jwt.verifyAsync(token, {
+        secret: process.env.REFRESH_TOKEN_SECRET,
+      });
+
+      const { accessToken, refreshToken } = await this.#_createToken(
+        payload.id,
+      );
+
+      return {
+        success: true,
+        message: 'Tokenlar yangilandi',
+        data: {
+          tokens: {
+            accessToken,
+            refreshToken,
+          },
+        },
+      };
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        throw new ForbiddenException('Refresh token muddati tugagan');
+      }
+
+      if (error.name === 'JsonWebTokenError') {
+        throw new ForbiddenException('Refresh token yaroqsiz');
+      }
+
+      throw new InternalServerErrorException('Token tekshirishda xatolik');
     }
+  }
 
-    const payload = await this.jwt.verifyAsync(token, {
-      secret: process.env.REFRESH_TOKEN_SECRET,
+  async me(user_id: string) {
+    const founded = await this.prisma.user.findFirst({
+      where: {
+        id: user_id,
+      },
     });
-
-    const { accessToken, refreshToken } = await this.#_createToken(payload.id);
+    if (!founded) {
+      throw new NotFoundException("Bunday ma'lumotli foydalanuvchi topilmadi!");
+    }
 
     return {
       success: true,
-      message: 'Tokenlar yangilandi',
-      data: {
-        tokens: {
-          accessToken,
-          refreshToken,
-        },
-      },
+      message: 'Foydalanuvchi profile',
+      data: founded,
     };
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      throw new ForbiddenException('Refresh token muddati tugagan');
-    }
-
-    if (error.name === 'JsonWebTokenError') {
-      throw new ForbiddenException('Refresh token yaroqsiz');
-    }
-
-    throw new InternalServerErrorException('Token tekshirishda xatolik');
   }
-}
-
 
   async #_createToken(id: string) {
     const payload = { id };

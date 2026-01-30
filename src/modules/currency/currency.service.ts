@@ -41,6 +41,12 @@ export class CurrencyService {
       where: {
         id,
       },
+      include: {
+        Account: true,
+        From_currency_exchanges: true,
+        To_currency_exchanges: true,
+        User: true,
+      },
     });
     if (!founded) {
       throw new NotFoundException('Valyuta topilmadi!');
@@ -111,16 +117,18 @@ export class CurrencyService {
       throw new NotFoundException('Valyuta topilmadi!');
     }
 
-    const isExist = await this.prisma.currency.findFirst({
-      where: {
-        name: payload.name,
-        id: { not: { equals: currency_id } },
-        user_id: user_id,
-      },
-    });
+    if (payload.name !== undefined) {
+      const isExist = await this.prisma.currency.findFirst({
+        where: {
+          name: payload.name,
+          id: { not: { equals: currency_id } },
+          user_id: user_id,
+        },
+      });
 
-    if (isExist) {
-      throw new ConflictException('Bu valyuta sizda allaqachon mavjud!');
+      if (isExist) {
+        throw new ConflictException('Bu valyuta sizda allaqachon mavjud!');
+      }
     }
 
     const updated = await this.prisma.currency.update({

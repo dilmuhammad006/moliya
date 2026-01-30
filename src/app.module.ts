@@ -3,7 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma';
 import { APP_GUARD } from '@nestjs/core';
 import { CheckAuth } from './guards';
-import { AuthModule, CategoryModule, CurrencyModule } from './modules';
+import {
+  AccountModule,
+  AuthModule,
+  CategoryModule,
+  CurrencyModule,
+} from './modules';
 
 @Module({
   imports: [
@@ -13,7 +18,8 @@ import { AuthModule, CategoryModule, CurrencyModule } from './modules';
     PrismaModule,
     AuthModule,
     CurrencyModule,
-    CategoryModule
+    CategoryModule,
+    AccountModule,
   ],
   providers: [
     {
