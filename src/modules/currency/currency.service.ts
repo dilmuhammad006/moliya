@@ -24,15 +24,6 @@ export class CurrencyService {
       take: page_size,
       orderBy: { created_at: 'desc' },
     });
-    this.prisma.currency.count({
-      where: {
-        name: {
-          contains: search,
-          mode: 'insensitive',
-        },
-      },
-    });
-
     return {
       success: true,
       message: 'Barcha valyutalar',
@@ -157,6 +148,9 @@ export class CurrencyService {
       success: true,
       message: 'Sizning barcha valyutalaringiz',
       data: currencies,
+      meta: {
+        total: currencies.length,
+      },
     };
   }
 }

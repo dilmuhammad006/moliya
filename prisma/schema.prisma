@@ -5,6 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum AccountStatus {
@@ -35,6 +36,7 @@ model User {
   updated_at DateTime   @updatedAt
   Accounts   Account[]
   Currencies Currency[]
+  Category   Category[]
 
   @@map("user")
 }
@@ -45,9 +47,9 @@ model Currency {
   Account                 Account[]
   From_currency_exchanges CurrencyExchange[] @relation("From_currency")
   To_currency_exchanges   CurrencyExchange[] @relation("To_currency")
-  user_id     String?
+  user_id                 String
 
-  User       User?    @relation(fields: [user_id], references: [id])
+  User       User     @relation(fields: [user_id], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -77,9 +79,11 @@ model Category {
   name          String
   category_type CategoryType
   Transactions  Transaction[]
+  user_id       String
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  User       User     @relation(fields: [user_id], references: [id])
 
   @@map("category")
 }
