@@ -29,7 +29,6 @@ export class GetAllAccountDto {
   @ApiProperty({
     type: 'string',
     required: false,
-    example: 'something',
   })
   @IsOptional()
   @IsString()

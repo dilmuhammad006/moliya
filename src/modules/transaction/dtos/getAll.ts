@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsUUID, Min } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { CategoryType } from '@prisma/client';
+import { TransactionType } from '@prisma/client';
 
-export class GetAllCategoryDto {
+export class GetAllTransactionDto {
   @ApiProperty({
     type: 'number',
     required: false,
@@ -29,18 +29,28 @@ export class GetAllCategoryDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    example: 'uuid-id',
   })
   @IsOptional()
-  @IsString()
-  search: string;
+  @IsUUID()
+  from_account_id?: string;
 
   @ApiProperty({
     type: 'string',
     required: false,
-    enum: CategoryType,
-    default: CategoryType.INCOME,
+    example: 'uuid-id',
   })
   @IsOptional()
-  @IsEnum(CategoryType)
-  category_type?: CategoryType;
+  @IsUUID()
+  category_id?: string;
+
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    enum: TransactionType,
+    default: TransactionType.TRANSFER,
+  })
+  @IsOptional()
+  @IsEnum(TransactionType)
+  transaction_type?: TransactionType;
 }

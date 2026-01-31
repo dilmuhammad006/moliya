@@ -1,5 +1,5 @@
 generator client {
-  provider   = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -22,7 +22,6 @@ enum TransactionType {
 enum CategoryType {
   INCOME
   OUTCOME
-  TRANSFER
 }
 
 model User {
@@ -31,11 +30,12 @@ model User {
   full_name String
   password  String
 
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-  Accounts   Account[]
-  Currencies Currency[]
-  Category   Category[]
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  Accounts     Account[]
+  Currencies   Currency[]
+  Category     Category[]
+  Transactions Transaction[]
 
   @@map("user")
 }
@@ -91,13 +91,15 @@ model Transaction {
   id               String          @id @default(uuid())
   amount           Int
   comment          String?
-  from_account_id  String
-  to_account_id    String
-  category_id      String
+  from_account_id  String?
+  to_account_id    String?
+  category_id      String?
+  user_id          String?
   transaction_type TransactionType
   From_account     Account?        @relation("From_account", fields: [from_account_id], references: [id])
   To_account       Account?        @relation("To_account", fields: [to_account_id], references: [id])
   Category         Category?       @relation(fields: [category_id], references: [id])
+  User             User?           @relation(fields: [user_id], references: [id])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

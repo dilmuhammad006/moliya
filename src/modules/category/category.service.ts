@@ -15,7 +15,7 @@ export class CategoryService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAll(
-    { page = 1, page_size = 10, search }: GetAllCategoryDto,
+    { page = 1, page_size = 10, search, category_type }: GetAllCategoryDto,
     user_id: string,
   ) {
     const skip = (page - 1) * page_size;
@@ -27,7 +27,9 @@ export class CategoryService {
           mode: 'insensitive',
         },
         user_id,
+        ...(category_type && { category_type }),
       },
+
       skip,
       take: page_size,
       orderBy: { created_at: 'desc' },

@@ -31,6 +31,7 @@ export class AccountService {
           equals: account_type,
         },
       },
+      include: { Currency: true },
       skip,
       take: page_size,
       orderBy: { created_at: 'desc' },

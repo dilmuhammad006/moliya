@@ -8,6 +8,7 @@ import {
   AuthModule,
   CategoryModule,
   CurrencyModule,
+  TransactionModule,
 } from './modules';
 
 @Module({
@@ -20,6 +21,7 @@ import {
     CurrencyModule,
     CategoryModule,
     AccountModule,
+    TransactionModule,
   ],
   providers: [
     {

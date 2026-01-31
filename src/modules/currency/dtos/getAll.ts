@@ -28,7 +28,6 @@ export class GetAllCurrencyDto {
   @ApiProperty({
     type: 'string',
     required: false,
-    example: 'something',
   })
   @IsOptional()
   @IsString()

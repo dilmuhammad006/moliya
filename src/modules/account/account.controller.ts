@@ -21,7 +21,7 @@ export class AccountController {
   constructor(private readonly service: AccountService) {}
 
   @Protected(true)
-  @Get()
+  @Get("my")
   async getAll(
     @Query() payload: GetAllAccountDto,
     @Req() req: Request & { userId: string },
