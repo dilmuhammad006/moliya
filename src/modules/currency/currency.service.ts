@@ -10,7 +10,10 @@ import { CreateCurrencyDto, UpdateCurrencyDto } from './dtos';
 @Injectable()
 export class CurrencyService {
   constructor(private readonly prisma: PrismaService) {}
-  async getAll({ page = 1, page_size = 10, search }: GetAllCurrencyDto) {
+  async getAll(
+    { page = 1, page_size = 10, search }: GetAllCurrencyDto,
+    user_id: string,
+  ) {
     const skip = (page - 1) * page_size;
 
     const currencies = await this.prisma.currency.findMany({
@@ -19,6 +22,7 @@ export class CurrencyService {
           contains: search,
           mode: 'insensitive',
         },
+        user_id,
       },
       skip,
       take: page_size,
@@ -143,22 +147,6 @@ export class CurrencyService {
       success: true,
       message: 'Valyuta yangilandi',
       data: updated,
-    };
-  }
-
-  async getMy(user_id: string) {
-    const currencies = await this.prisma.currency.findMany({
-      where: {
-        user_id,
-      },
-    });
-    return {
-      success: true,
-      message: 'Sizning barcha valyutalaringiz',
-      data: currencies,
-      meta: {
-        total: currencies.length,
-      },
     };
   }
 }

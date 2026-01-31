@@ -11,12 +11,10 @@ import { AccountStatus } from '@prisma/client';
 export class AccountService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAll({
-    page = 1,
-    page_size = 10,
-    search,
-    account_type,
-  }: GetAllAccountDto) {
+  async getAll(
+    { page = 1, page_size = 10, search, account_type }: GetAllAccountDto,
+    user_id: string,
+  ) {
     const skip = (page - 1) * page_size;
 
     const accounts = await this.prisma.account.findMany({
@@ -25,6 +23,7 @@ export class AccountService {
           contains: search,
           mode: 'insensitive',
         },
+        user_id,
         account_type: {
           not: {
             equals: AccountStatus.DELETED,
@@ -71,24 +70,6 @@ export class AccountService {
       data: founded,
     };
   }
-
-  async getMy(user_id: string) {
-    const accounts = await this.prisma.account.findMany({
-      where: {
-        user_id,
-      },
-    });
-
-    return {
-      success: true,
-      message: 'Foydalanuvchining akkauntlari',
-      data: accounts,
-      meta: {
-        total: accounts.length,
-      },
-    };
-  }
-
   async delete(id: string) {
     const founded = await this.prisma.account.findFirst({
       where: {

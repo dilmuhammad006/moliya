@@ -24,15 +24,12 @@ export class CurrencyController {
   constructor(private readonly servcie: CurrencyService) {}
 
   @Protected(true)
-  @Get()
-  async getAll(@Query() payload: GetAllCurrencyDto) {
-    return await this.servcie.getAll(payload);
-  }
-
-  @Protected(true)
-  @Get('my')
-  async getMy(@Req() req: Request & { userId: string }) {
-    return await this.servcie.getMy(req.userId);
+  @Get("my")
+  async getAll(
+    @Query() payload: GetAllCurrencyDto,
+    @Req() req: Request & { userId: string },
+  ) {
+    return await this.servcie.getAll(payload, req.userId);
   }
 
   @Protected(true)

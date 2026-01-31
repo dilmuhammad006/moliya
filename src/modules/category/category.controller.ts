@@ -25,17 +25,13 @@ export class CategoryController {
   constructor(private readonly service: CategoryService) {}
 
   @Protected(true)
-  @Get()
-  async getAll(@Query() payload: GetAllCategoryDto) {
-    return await this.service.getAll(payload);
+  @Get("my")
+  async getAll(
+    @Query() payload: GetAllCategoryDto,
+    @Req() req: Request & { userId: string },
+  ) {
+    return await this.service.getAll(payload, req.userId);
   }
-
-  @Protected(true)
-  @Get('my')
-  async getMy(@Req() req: Request & { userId: string }) {
-    return await this.service.getMy(req.userId);
-  }
-
   @Protected(true)
   @Get(':id')
   async getOne(@Param('id') id: string) {

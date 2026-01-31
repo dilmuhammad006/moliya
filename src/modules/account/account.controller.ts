@@ -22,14 +22,11 @@ export class AccountController {
 
   @Protected(true)
   @Get()
-  async getAll(@Query() payload: GetAllAccountDto) {
-    return await this.service.getAll(payload);
-  }
-
-  @Protected(true)
-  @Get('my')
-  async getMy(@Req() req: Request & { userId: string }) {
-    return await this.service.getMy(req.userId);
+  async getAll(
+    @Query() payload: GetAllAccountDto,
+    @Req() req: Request & { userId: string },
+  ) {
+    return await this.service.getAll(payload, req.userId);
   }
 
   @Protected(true)

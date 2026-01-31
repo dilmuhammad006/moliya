@@ -14,7 +14,10 @@ import {
 export class CategoryService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAll({ page = 1, page_size = 10, search }: GetAllCategoryDto) {
+  async getAll(
+    { page = 1, page_size = 10, search }: GetAllCategoryDto,
+    user_id: string,
+  ) {
     const skip = (page - 1) * page_size;
 
     const categories = await this.prisma.category.findMany({
@@ -23,6 +26,7 @@ export class CategoryService {
           contains: search,
           mode: 'insensitive',
         },
+        user_id,
       },
       skip,
       take: page_size,
@@ -81,22 +85,6 @@ export class CategoryService {
     return {
       success: true,
       message: "Kategoriya o'chirildi",
-    };
-  }
-
-  async getMy(user_id: string) {
-    const categories = await this.prisma.category.findMany({
-      where: {
-        user_id,
-      },
-    });
-    return {
-      success: true,
-      message: 'Sizning kategoriyalaringiz',
-      data: categories,
-      meta: {
-        total: categories.length,
-      },
     };
   }
 
