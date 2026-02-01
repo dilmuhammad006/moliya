@@ -4,9 +4,9 @@ import { IsNumber } from 'class-validator';
 
 export class UpdateExchangeDto {
   @ApiProperty({
-    type: 'string',
+    type: 'number',
     required: true,
-    example: '1',
+    example: 1.00,
   })
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 10 })

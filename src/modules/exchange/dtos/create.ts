@@ -20,9 +20,9 @@ export class CreateExchangeDto {
   to_currency_id: string;
 
   @ApiProperty({
-    type: 'string',
+    type: 'number',
     required: true,
-    example: '1',
+    example: 1.00,
   })
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 10 })

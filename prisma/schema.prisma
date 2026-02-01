@@ -59,7 +59,7 @@ model Currency {
 model Account {
   id                    String        @id @default(uuid())
   name                  String
-  balance               Int
+  balance               Float
   currency_id           String?
   user_id               String
   account_type          AccountStatus
@@ -90,7 +90,7 @@ model Category {
 
 model Transaction {
   id               String          @id @default(uuid())
-  amount           Int
+  amount           Float
   comment          String?
   from_account_id  String?
   to_account_id    String?

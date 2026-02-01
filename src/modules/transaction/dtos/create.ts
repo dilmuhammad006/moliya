@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TransactionType } from '@prisma/client';
+import { Type } from 'class-transformer';
 import {
   IsEnum,
-  IsInt,
+  IsNumber,
   IsOptional,
-  IsPositive,
   IsString,
   IsUUID,
 } from 'class-validator';
@@ -13,10 +13,10 @@ export class CreateTransactionDto {
   @ApiProperty({
     type: 'number',
     required: true,
-    example: 1000,
+    example: 1.0,
   })
-  @IsInt()
-  @IsPositive()
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 10 })
   amount: number;
 
   @ApiProperty({

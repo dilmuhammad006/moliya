@@ -71,6 +71,7 @@ export class AccountService {
       data: founded,
     };
   }
+  
   async delete(id: string) {
     const founded = await this.prisma.account.findFirst({
       where: {
