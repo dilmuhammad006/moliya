@@ -8,6 +8,7 @@ import {
   AuthModule,
   CategoryModule,
   CurrencyModule,
+  ExchangeModule,
   TransactionModule,
 } from './modules';
 
@@ -22,6 +23,7 @@ import {
     CategoryModule,
     AccountModule,
     TransactionModule,
+    ExchangeModule,
   ],
   providers: [
     {
